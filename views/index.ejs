@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width = device-width, initial-scale = 1">
+
+    <title>Price Check Demo - Letao</title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css'/>
+
+    <style>
+        /* allows us to use custom font, located in public folder */
+        @font-face {
+            font-family: quickSand;
+            src: url(/Quicksand_Book.otf);
+        }
+
+        html{
+            height: 100%;
+        }
+
+        /* Z INDEX = -2 */
+        body {
+            font-family: quickSand;
+            font-size: 16px;
+            background-color: #d4ca97;
+            z-index: -2;
+            height: 100%;
+        }
+
+        /* original idea was to split the page 50/50
+         now 53/5/(100-(53 + 5))
+         Z INDEX = 0 */
+        .left-side {
+            opacity: 0.0;
+            position: fixed;
+            top: 0px;
+            left: -300px;
+            width: 53%;
+            height: 100%;
+            background-color: #7b876a;
+            z-index: 0;
+        }
+        /* Z INDEX = -1 */
+        .middle-side {
+            opacity: 0.0;
+            position: fixed;
+            top: 0px;
+            left: -500px;
+            width: 58%;
+            height: 100%;
+            background-color: #bbcaf3;
+            z-index: -1;
+        }
+
+        input[type=text] {
+            width: 125px;
+            box-sizing: border-box;
+            border-radius: 30px;
+            font-size: 16px;
+            border: none;
+            background-color: #f5e9ae;
+
+            /* todo: download image to local folder
+             instead of visiting url page each time */
+
+            background-image: url('http://assets.meredith.com/static/themes/home/images/email.png');
+            background-position: 5px 7px;
+            background-repeat: no-repeat;
+            padding: 12px 20px 12px 40px;
+            -webkit-transition: width 0.4s ease-in-out;
+            transition: width 0.4s ease-in-out;
+        }
+        input[type=text]:focus {
+            width: 50%;
+        }
+
+        input:focus{
+            outline: none;
+        }
+        .button{
+            border-radius: 30px;
+            border: none;
+            background: #F5E9AE;
+            padding: 12px;
+        }
+
+        .middle-div {
+            position: relative;
+            top: 45%;
+            -webkit-transform: translateY(-55%);
+            -ms-transform: translateY(-55%);
+            transform: translateY(-55%);
+        }
+
+        #error{
+            left: -30px;
+            opacity: 0.0;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="middle-side">
+</div>
+
+<div class="left-side">
+    <div class="middle-div text-center">
+        <h1>Price Check Demo</h1>
+
+        <input id="to" type="text" class="textField" placeholder="Email...">
+        <label for="to"></label>
+        <input type="submit" id="send_email" class="button" value="submit">
+    </div>
+
+    <div class="middle-div text-center" id="error"></div>
+
+</div>
+
+<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+<script type="text/javascript" src="/javascripts/jquery-3.1.1.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $(".left-side").animate({
+             left: "+=300",
+             opacity: 1.0
+        }, 1500, function(){}
+        );
+        $(".middle-side").delay(500).animate({
+                    left: "+=500",
+                    opacity: 1.0
+                }, 1500, function(){}
+        );
+        var to;
+        var flag = true;
+        $("#send_email").click(function(){
+            to = $("#to").val();
+            $.get("http://localhost:3000/sending-email", {
+                to: to
+            }, function(data){
+                if(data === 'done'){
+                    window.location.replace("http://localhost:3000/search");
+                }else{
+                    $('#error').html(data);
+                    if(flag == true){
+                        $("#error").animate({
+                                    left: "+=29",
+                                    opacity: 1.0
+                                }, 500, function(){}
+                        );
+                        flag = false;
+                    }
+                    // do we need this return? check later
+                    //return false;
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

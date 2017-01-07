@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width = device-width, initial-scale = 1">
+
+    <title>Price Check Demo - Letao</title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css'/>
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+
+    <style>
+        @font-face {
+            font-family: quickSand;
+            src: url(/Quicksand_Book.otf);
+        }
+
+        html{
+            height: 100%;
+        }
+        body {
+            font-family: quickSand;
+            font-size: 20px;
+            background-color: #d4ca97;
+            z-index: -2;
+            height: 100%;
+        }
+        .left-side {
+            opacity: 0.0;
+            position: fixed;
+            top: 0px;
+            left: -300px;
+            width: 53%;
+            height: 100%;
+            background-color: #7b876a;
+            background-image: url("/images/bestbuy logoReformat.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 0;
+        }
+        .middle-side {
+            opacity: 0.0;
+            position: fixed;
+            top: 0px;
+            left: -500px;
+            width: 58%;
+            height: 100%;
+            background-color: #bbcaf3;
+            z-index: -1;
+        }
+
+        input[type=text] {
+            width: 200px;
+            box-sizing: border-box;
+            border-radius: 30px;
+            font-size: 16px;
+            border: none;
+            background-color: #f5e9ae;
+            background-image: url('http://www.fincaperseverancia.com/images/search@2x.png');
+            background-position: 5px 7px;
+            background-repeat: no-repeat;
+            padding: 12px 20px 12px 40px;
+            -webkit-transition: width 0.4s ease-in-out;
+            transition: width 0.4s ease-in-out;
+        }
+        input[type=text]:focus {
+            width: 300px;
+        }
+
+        input:focus{
+            outline: none;
+        }
+        .button{
+            -webkit-border-radius: 30px;
+            -moz-border-radius: 30px;
+            border-radius: 30px;
+            border: none;
+            background: #F5E9AE;
+            padding-top: 12px;
+            padding-right: 12px;
+            padding-left: 12px;
+            padding-bottom: 12px;
+        }
+
+        .middle-div {
+            position: relative;
+            top: 45%;
+            -webkit-transform: translateY(-55%);
+            -ms-transform: translateY(-55%);
+            transform: translateY(-55%);
+        }
+
+        #error{
+            left: -30px;
+            opacity: 0.0;
+        }
+        #error2{
+            left: -30px;
+            opacity: 0.0;
+        }
+
+        /* RADIO BUTTON CSS */
+
+        input[type=radio]{
+            -webkit-appearance: none; /* remove default */
+            display: inline-block;
+            margin-bottom: 0.5em;
+            margin-right: 0.5em;
+            width: 24px;
+            height: 24px;
+            border-radius: 1em;
+            cursor: pointer;
+            vertical-align: middle;
+            box-shadow: none;
+            background-color:  #f5e9ae;
+            background-image: -webkit-radial-gradient( hsl(229, 14%, 62%) 50%, hsl(229, 14%, 62%) 50%);
+            background-position-x: 3em;
+            background-repeat: no-repeat;
+            -webkit-transition: background-position .15s cubic-bezier(.8, 0, 1, 1),
+            -webkit-transform .25s cubic-bezier(.8, 0, 1, 1);
+            outline: none;
+        }
+        input[type=radio]:checked {
+            -webkit-transition: background-position .2s .15s cubic-bezier(0, 0, .2, 1),
+            -webkit-transform .25s cubic-bezier(0, 0, .2, 1);
+        }
+        input[type=radio]:active {
+            -webkit-transform: scale(1.5);
+            -webkit-transition: -webkit-transform .1s cubic-bezier(0, 0, .2, 1);
+        }
+
+        input[type=radio],
+        input[type=radio]:active {
+            background-position: 0 24px;
+        }
+        input[type=radio]:checked {
+            background-position: 0 0;
+        }
+        input[type=radio]:checked ~ input[type=radio],
+        input[type=radio]:checked ~ input[type=radio]:active {
+            background-position: 0 -24px;
+        }
+        input[type=radio]:focus{
+            outline: none;
+        }
+
+        /* LINKS */
+
+        a, p{
+            color: #313433;
+        }
+        a:hover{
+            color: #78a0bd;
+            text-decoration: none;
+        }
+
+        .right-side{
+            top: 0px;
+            left: 0;
+            margin-left: 50%;
+            width: 50%;
+            height: 100%;
+            position: fixed;
+            background-image: url(/images/amazonlogoReformat.png);
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="middle-side">
+</div>
+
+<div class="left-side">
+    <div class="middle-div text-center" id="searchBar">
+        <h1>Price Check Demo</h1>
+
+        <input id="searchItem" type="text" class="textField" placeholder="Search...">
+        <label for="searchItem"></label>
+        <input type="submit" id="send_search" class="button" value="submit">
+    </div>
+
+    <div class="middle-div text-center" id="error"></div>
+</div>
+
+<!-- todo: create another form on the right side
+    to submit a price and the selected item -->
+<div class="right-side">
+    <div class="middle-div text-center" id="submitBar" style="visibility: hidden; opacity: 0">
+        <h1>Add to Wishlist</h1>
+
+        <input id="submitPrice" type="text" class="textField" placeholder="Enter a price...">
+        <label for="submitPrice"></label>
+        <input type="submit" id="send_price" class="button" value="submit">
+
+    </div>
+    <div class="middle-div text-center" id="error2"></div>
+
+</div>
+
+<div class="container-fluid" style="padding-top: 8em">
+    <div id="searchResults" style="display: none">
+    </div>
+</div>
+
+<script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+<script type="text/javascript" src="/javascripts/jquery-3.1.1.min.js"></script>
+<script>
+    $(document).ready(function(){
+
+        $(".left-side").animate({
+            left: "+=300",
+            opacity: 1.0
+        }, 1500, function(){});
+        $(".middle-side").delay(500).animate({
+            left: "+=500",
+            opacity: 1.0
+        }, 1500, function(){});
+        var searchItem;
+        var flag = true;
+        var flag2 = true;
+        $("#send_search").click(function(){
+            searchItem = $("#searchItem").val();
+            $.get("http://localhost:3000/searchItem", {
+                searchItem: searchItem
+            }, function(data){
+                if(data.length == 0){
+                    var errorMessage = "<p>no products found (in Best Buy database), try again</p>";
+                    $('#error').html(errorMessage);
+                    if(flag2 == true){
+                        $("#error").animate({
+                            left: "+=29",
+                            opacity: 1.0
+                        }, 500, function(){});
+                        flag2 = false;
+                    }
+                }else{
+                    $("#error").fadeOut();
+                    // todo: when data is ready, animate the middle div to fade left
+                    // and shift the left div to 50%
+                    // also shift the search form up to the top left
+                    // make sure it doesnt overlap with results
+                    // display the results
+                    $("#searchResults").html(data);
+                    $(".middle-side").animate({
+                        right: "-=500",
+                        opacity: 0.0
+                    }, 1000, function(){});
+
+                    var documentWidth = $(document).width();
+                    var currentLeftWidth = documentWidth * 0.53;
+                    var nextLeftWidth = documentWidth * 0.5;
+                    var toSubtractLeft = currentLeftWidth - nextLeftWidth;
+                    if(flag == true){
+                        $(".left-side").animate({
+                            left: "-=" + toSubtractLeft
+                        }, 1000, function(){});
+                        flag = false;
+                    }
+
+                    $("#searchBar").animate({
+                        top: "5em"
+                    }, 500, function(){});
+                    $("#submitBar").css("visibility", "visible").animate({
+                        top: "5em",
+                        opacity: 1.0
+                    }, 1000, function(){});
+                    $("#error2").animate({
+                        top: "3.0em"
+                    }, 1000, function(){});
+                    $("#searchResults").delay(400).animate({
+                        //width: "show",
+                        height: "show"
+                    }, 500, function(){})
+                }
+            });
+        });
+
+        var sendPrice, upc;
+        var flag3 = true;
+        $("#send_price").click(function(){
+            upc = $("input[name = item]:checked").val();
+            // forgot to use id selector - dec. 30
+            sendPrice = $("#submitPrice").val();
+            $.get("http://localhost:3000/sendPrice", {
+                sendPrice: sendPrice,
+                upc: upc
+            }, function(data){
+                // todo: here
+                if(data === 'done'){
+                    // display error message, after 2 seconds, return to homepage
+
+                    $('#error').html("<p>email not found, redirecting to homepage</p>");
+                    if(flag3 == true){
+                        $("#error2").animate({
+                                    left: "+=29",
+                                    opacity: 1.0
+                                }, 500, function(){}
+                        );
+                        flag3 = false;
+                    }
+
+                    setTimeout(function(){
+                        window.location.replace("http://localhost:3000");
+                    }, 1500);
+                }else if(data === 'NaN'){
+                    if(flag3 == true){
+                        $('#error2').html("<p>please enter a number (eg. 35)</p>");
+                        $("#error2").animate({
+                            left: "+=29",
+                            opacity: 1.0
+                        }, 500, function(){});
+                        flag3 = false;
+                    }else{
+                        $("#error2").animate({
+                            left: "-=29",
+                            opacity: 0.0
+                        }, 500, function(){
+                            $('#error2').html("<p>please enter a number (eg. 35)</p>");
+                            $("#error2").animate({
+                                left: "+=29",
+                                opacity: 1.0
+                            }, 500, function(){});
+                        });
+                    }
+                }else if(data === 'finish'){
+                    if(flag3 == true){
+                        $('#error2').html("<p>submission successful! a confirmation email will be sent to you soon</p>");
+                        $("#error2").animate({
+                            left: "+=29",
+                            opacity: 1.0
+                        }, 500, function(){});
+                        flag3 = false;
+                    }else{
+                        $("#error2").animate({
+                            left: "-=29",
+                            opacity: 0.0
+                        }, 500, function(){
+                            $('#error2').html("<p>submission successful! a confirmation email will be sent to you soon</p>");
+                            $("#error2").animate({
+                                left: "+=29",
+                                opacity: 1.0
+                            }, 500, function(){});
+                        });
+                    }
+                }
+            });
+        });
+
+        $(window).scroll(function(){
+            if($(this).scrollTop() > 5){
+                $("#searchBar").fadeOut();
+                $("#submitBar").fadeOut();
+                $("#error2").fadeOut();
+            }else{
+                $("#searchBar").fadeIn();
+                $("#submitBar").fadeIn();
+                $("#error2").fadeIn();
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>
