@@ -5,9 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var bby = require('bestbuy')('');
-var util = require('util'),
-    OperationHelper = require('apac').OperationHelper;
 var sqlite3 = require('sqlite3').verbose();
 var nodemailer = require('nodemailer');
 var validator = require('email-validator');
@@ -15,15 +12,50 @@ var session = require('express-session');
 var connect = require('connect'),
     SQLiteStore = require('connect-sqlite3')(session);
 
-var opHelper = new OperationHelper({
-    awsId:     '',
-    awsSecret: '',
-    assocId:   'nodeapp-20'
+var keys = new sqlite3.Database('hide.db');
+var bby;
+var opHelper;
+var util = require('util'),
+    OperationHelper = require('apac').OperationHelper;
+var smtpTransport;
+keys.serialize(function(){
+    keys.each('SELECT * FROM bestbuy', function(err, row){
+        bby = require('bestbuy')(row.serial);
+    });
+
+    keys.each('SELECT * FROM aws', function(err, row){
+        var id = row.awsId;
+        var secret = row.awsSecret;
+        var assoc = row.assocId;
+
+        opHelper = new OperationHelper({
+            awsId: id,
+            awsSecret: secret,
+            assocId: assoc
+        });
+    });
+
+    keys.each('SELECT * FROM nodemailer', function(err, row){
+        var id = row.clientId;
+        var secret = row.clientSecret;
+        var refresh = row.refreshToken;
+
+        smtpTransport = nodemailer.createTransport("SMTP", {
+            service: "Gmail",
+            auth: {
+                XOAuth2: {
+                    user: "PriceNotificationHere@gmail.com",
+                    clientId: id,
+                    clientSecret: secret,
+                    refreshToken: refresh
+                }
+            }
+        });
+    });
 });
 
 var routes = require('./routes/index');
 var search = require('./routes/search');
-
 var users = require('./routes/users');
 
 var app = express();
@@ -92,17 +124,7 @@ app.get('/sendPrice', function(req, res){
         // 2. get new credentials
         // 3. format mailOptions correctly
         // 4. run price check updates (not here)
-        var smtpTransport = nodemailer.createTransport("SMTP", {
-            service: "Gmail",
-            auth: {
-                XOAuth2: {
-                    user: "PriceNotificationHere@gmail.com",
-                    clientId: ".apps.googleusercontent.com",
-                    clientSecret: "",
-                    refreshToken: ""
-                }
-            }
-        });
+
 
         /**
          sess.nameList = nameList;

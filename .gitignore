@@ -3,3 +3,4 @@ bfg-1.12.14.jar
 node_modules/
 .idea/
 bin/
+hide.db
